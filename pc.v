@@ -4,10 +4,10 @@ module ps
 (
     input CLK,
     input areset,
-    input write_bit,
+    input offset_bit,
     input [7:0] addr_in,
     output [7:0] addr_out
-)
+);
     reg [7:0] pc_mem;
     assign addr_out = pc_mem;
 
@@ -21,7 +21,7 @@ module ps
         begin
             if (write_bit)
             begin
-                pc_mem = addr_in;
+                pc_mem = pc_mem + addr_in;
             end
             else
             begin
