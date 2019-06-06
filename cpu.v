@@ -41,6 +41,44 @@ module cpu	//Do not change top module name or ports.
 	//Testbench wiring end.
 
 	//Write your code here.
+	wire pc_write;
+	wire register_write;
+	wire alu_negate;
+	wire [7:0] alu_result;
+	wire [7:0] val_a;
+	wire [7:0] val_b;
+
+	controller controller_0(
+		.register_write(register_write),
+		.pc_write(pc_write),
+		.alu_negation(alu_negate),
+	);
+
+	pc pc_0(
+		.CLK(clk),
+		.areset(areset),
+		.offset_bit(pc_write),
+		.addr_out(imem_addr),
+	);
+
+	registers registers_0(
+		.CLK(clk),
+		.areset(areset),
+		.selector_a(imem_data[1:0]),
+		.selector_b(imem_data[3:2]),
+		.write_bit(register_write),
+		.selector_e(imem_data[1:0]),
+		.data_in(alu_result),
+		.data_out_a(val_a),
+		.data_out_b(val_b),
+	);
+
+	alu alu_0(
+		.negate(alu_negate),
+		.val_a(val_a),
+		.val_b(val_b),
+		.val_e(alu_result)
+	);
 
 endmodule
 
