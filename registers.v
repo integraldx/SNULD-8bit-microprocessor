@@ -3,6 +3,7 @@
 module registers
 (
     input CLK,
+    input areset,
     input [1:0] selector_a,
     input [1:0] selector_b,
 
@@ -27,7 +28,14 @@ module registers
 
     always @ (posedge CLK)
     begin
-        if (write_bit)
+        if (areset)
+        begin
+            regs[0] = 0;
+            regs[1] = 0;
+            regs[2] = 0;
+            regs[3] = 0;
+        end
+        else if (write_bit)
         begin
             regs[selector_e] = data_in;
         end

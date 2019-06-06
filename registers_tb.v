@@ -3,6 +3,7 @@
 module registers_tb
 ();
     reg CLK = 0;
+    reg areset = 0;
     reg [1:0] selector_a = 0;
     reg [1:0] selector_b = 0;
 
@@ -15,6 +16,7 @@ module registers_tb
 
     registers uut(
         .CLK(CLK),
+        .areset(areset),
         .selector_a(selector_a),
         .selector_b(selector_b),
         .write_bit(write_bit),
