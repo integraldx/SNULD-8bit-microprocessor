@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module ps
+module pc
 (
     input CLK,
     input areset,
@@ -19,7 +19,7 @@ module ps
         end
         else
         begin
-            if (write_bit)
+            if (offset_bit)
             begin
                 pc_mem = pc_mem + addr_in;
             end
