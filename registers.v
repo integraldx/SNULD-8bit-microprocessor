@@ -18,13 +18,6 @@ module registers
 
     assign data_out_a = regs[selector_a];
     assign data_out_b = regs[selector_b];
-    
-    initial begin
-        regs[0] = 0;
-        regs[1] = 0;
-        regs[2] = 0;
-        regs[3] = 0;
-    end
 
     always @ (posedge CLK)
     begin

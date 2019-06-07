@@ -45,15 +45,17 @@ module cpu	//Do not change top module name or ports.
 	wire register_write;
     wire register_from_memory;
 	wire alu_negate;
-    wire val_a_pc_selection;
-    wire val_b_imm_selection;
+    wire val_a_imm_selection;
+    wire val_b_pc_selection;
+    wire reg_num_shift;
 
     // Data bits
 	wire [7:0] alu_result;
 	wire [7:0] val_a;
 	wire [7:0] val_b;
-    wire [7:0] val_e;
-    wire [7:0] val_i;
+    wire [7:0] val_e; // alu calculation result
+    wire [7:0] val_i; // immidiate value
+
 	wire [7:0] reg_a;
 	wire [7:0] reg_b;
     wire [7:0] reg_e;
@@ -66,25 +68,27 @@ module cpu	//Do not change top module name or ports.
 		.pc_write(pc_write),
         .memory_to_register(register_from_memory),
 		.alu_negation(alu_negate),
-        .val_b_imm_selection(val_b_imm_selection)
+        .val_a_imm_selection(val_a_imm_selection),
+        .val_b_pc_selection(val_b_pc_selection),
+        .reg_num_shift(reg_num_shift)
 	);
 
 	pc pc_0(
 		.CLK(clk),
 		.areset(areset),
-		.offset_bit(pc_write),
-        .addr_in(val_i),
+		.pc_write(pc_write),
+        .addr_in(val_e),
 		.addr_out(imem_addr)
 	);
 
 	registers registers_0(
 		.CLK(clk),
 		.areset(areset),
-		.selector_a(imem_data[1:0]),
-		.selector_b(imem_data[3:2]),
+		.selector_a(reg_num_shift ? imem_data[5:4] : imem_data[3:2]),
+		.selector_b(reg_num_shift ? imem_data[3:2] : imem_data[1:0]),
 		.write_bit(register_write),
-		.selector_e(imem_data[1:0]),
-		.data_in(val_e),
+		.selector_e(reg_num_shift ? imem_data[5:4] : imem_data[3:2]),
+		.data_in(reg_e),
 		.data_out_a(reg_a),
 		.data_out_b(reg_b)
 	);
@@ -99,13 +103,13 @@ module cpu	//Do not change top module name or ports.
     signextender ext(
         .data_in(imem_data[5:0]),
         .is_6bits(pc_write),
-        .data_out(val_e)
+        .data_out(val_i)
     );
 
-    assign val_a_pc_selection = pc_write;
-    assign val_a = (val_a_pc_selection ? imem_addr : reg_a);
-    assign val_b = (val_b_imm_selection ? val_i : reg_b);
+    assign val_a = val_a_imm_selection ? val_i : reg_a;
+    assign val_b = val_b_pc_selection ? imem_addr : reg_b;
     assign reg_e = (register_from_memory ? dmem_read_data : val_e);
-    assign dmem_write_data = val_a;
+    assign dmem_write_data = reg_a;
+    assign dmem_addr = val_e;
 endmodule
 

@@ -4,14 +4,14 @@ module pc
 (
     input CLK,
     input areset,
-    input offset_bit,
+    input pc_write,
     input [7:0] addr_in,
     output [7:0] addr_out
 );
     reg [7:0] pc_mem;
     assign addr_out = pc_mem;
 
-    always @ (negedge CLK)
+    always @ (posedge CLK)
     begin
         if (areset)
         begin
@@ -19,9 +19,9 @@ module pc
         end
         else
         begin
-            if (offset_bit)
+            if (pc_write)
             begin
-                pc_mem = pc_mem + addr_in;
+                pc_mem = addr_in;
             end
             else
             begin
