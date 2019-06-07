@@ -219,7 +219,7 @@ module tb
 			tester_memory[(3 << 5) + 31]	<= 8'h32;
 
 			//------------------------------Level 2------------------------------
-			tester_memory[(4 << 5) + 0]	<= {8'hff};			
+			tester_memory[(4 << 5) + 0]	<= {8'hff};			// {arith, addi, r3, 2'b11}
 			tester_memory[(4 << 5) + 1]	<= {load, r0, r0, 2'b01};
 			tester_memory[(4 << 5) + 2]	<= {load, r1, r0, 2'b00};
 			tester_memory[(4 << 5) + 3]	<= {load, r2, r1, 2'b01};

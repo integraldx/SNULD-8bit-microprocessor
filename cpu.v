@@ -47,6 +47,7 @@ module cpu	//Do not change top module name or ports.
 	wire alu_negate;
     wire val_a_imm_selection;
     wire val_b_pc_selection;
+    wire val_b_imm_selection;
     wire reg_num_shift;
 
     // Data bits
@@ -70,6 +71,7 @@ module cpu	//Do not change top module name or ports.
 		.alu_negation(alu_negate),
         .val_a_imm_selection(val_a_imm_selection),
         .val_b_pc_selection(val_b_pc_selection),
+        .val_b_imm_selection(val_b_imm_selection),
         .reg_num_shift(reg_num_shift)
 	);
 
@@ -107,7 +109,7 @@ module cpu	//Do not change top module name or ports.
     );
 
     assign val_a = val_a_imm_selection ? val_i : reg_a;
-    assign val_b = val_b_pc_selection ? imem_addr : reg_b;
+    assign val_b = val_b_pc_selection ? imem_addr : (val_b_imm_selection ? val_i : reg_b);
     assign reg_e = (register_from_memory ? dmem_read_data : val_e);
     assign dmem_write_data = reg_a;
     assign dmem_addr = val_e;
